@@ -28,15 +28,6 @@ datareader <- function(file)
   TOP.CITY.IDX=find.keyword.idx(TOP.CITY)
   TOP.SEARCH.IDX=find.keyword.idx(TOP.SEARCH)
   RISING.SEARCH.IDX=find.keyword.idx(RISING.SEARCH)
-
-  message(
-    paste("TOP.REGION.IDX",TOP.REGION.IDX, 
-          "TOP.SUBREGION.IDX",TOP.SUBREGION.IDX,
-          "TOP.CITY.IDX",TOP.CITY.IDX,
-          "TOP.SEARCH.IDX",TOP.SEARCH.IDX,
-          "RISING.SEARCH.IDX",RISING.SEARCH.IDX )    
-    )
-  
   
   # trend data 
   if ( 
@@ -103,6 +94,12 @@ datareader <- function(file)
     } else ret$top.search <- NULL 
  
   
+  if (length(RISING.SEARCH.IDX) > 0) {
+    ret$rising.search <- .parse.rising.search(x, start.idx = RISING.SEARCH.IDX, 
+                                        end.idx = nrow(x))
+  }
+  else ret$rising.search <- NULL 
+  
   # return value 
   return(ret)
   
@@ -161,4 +158,14 @@ datareader <- function(file)
 }
 
 
-
+.parse.rising.search <-function(x,start.idx,end.idx)
+{
+  # hard code parsing  
+  y <- x[(start.idx+2):(end.idx-1),]
+  y
+  colnames(y) <- c('rising.search','type')
+  
+  y[,1] <- as.character(y[,1])
+  y[,2] <- as.character( y[,2] ) 
+  return(y)  
+}
